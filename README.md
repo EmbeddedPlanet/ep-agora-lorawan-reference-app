@@ -1,60 +1,29 @@
 ![](./resources/official_armmbed_example_badge.png)
-# Example LoRaWAN application for Mbed-OS
+# Example LoRaWAN application for Agora running Mbed-OS
 
 This is an example application based on `Mbed-OS` LoRaWAN protocol APIs. The Mbed-OS LoRaWAN stack implementation is compliant with LoRaWAN v1.0.2 specification.  See this [link](https://os.mbed.com/blog/entry/Introducing-LoRaWAN-11-support/) for information on support for other LoRaWAN spec versions. This application can work with any Network Server if you have correct credentials for the said Network Server. 
 
 ## Getting Started
 
 ### Supported Hardware
-[Mbed Enabled board with an Arduino form factor](https://os.mbed.com/platforms/?q=&Form+Factor=Arduino+Compatible) and one of the following:
-- [SX126X shield](https://os.mbed.com/components/SX126xMB2xAS/)
-- [SX1276 shield](https://os.mbed.com/components/SX1276MB1xAS/)
-- [SX1272 shield](https://os.mbed.com/components/SX1272MB2xAS/) 
-
-OR
-
-[Mbed Enabled LoRa Module](#module-support)
-
-### Import the example application
-For [Mbed Online Compiler](https://ide.mbed.com/compiler/) users:
-- Select "Import", then search for "mbed-os-example-lorawan" from "Team mbed-os-examples".  Or simply, import this repo by URL.
-
-- NOTE: Do NOT select "Update all libraries to latest revision" as this may cause breakage with a new lib version we have not tested.   
-
-For [mbed-cli](https://github.com/ARMmbed/mbed-cli) users:
-```sh
-$ mbed import mbed-os-example-lorawan
-$ cd mbed-os-example-lorawan
-
-#OR
-
-$ git clone git@github.com:ARMmbed/mbed-os-example-lorawan.git
-$ cd mbed-os-example-lorawan
-$ mbed deploy
-```
+[Agora](https://os.mbed.com/platforms/AGORA-DEV/)
 
 ### Example configuration and radio selection
 
-Because of the pin differences between the SX126x and SX127x radios, example application configuration files are provided with the correct pin sets in the `config/` dir of this project. 
-
-Please start by selecting the correct example configuration for your radio:  
-- For [Mbed Online Compiler](https://ide.mbed.com/compiler/) users, this can be done by simply replacing the contents of the `mbed_app.json` at the root of the project with the content of the correct example configuration in `config/` dir.
-- For [mbed-cli](https://github.com/ARMmbed/mbed-cli) users, the config file can be specifed on the command line with the `--app-config` option (ie `--app-config config/SX12xx_example_config.json`)
-
-With the correct config file selected, the user can then provide a pin set for their target board in the `NC` fields at the top if it is different from the default targets listed.  If your device is one of the LoRa modules supported by Mbed-OS, the pin set is already provided for the modules in the `target-overrides` field of the config file. For more information on supported modules, please refer to the [module support section](#module-support)
+Set channel plan and frequency in mbed_app.json.  Default channel plan works with Multitech Conduit gateway default channel setting of subband 2.
 
 ### Add network credentials
-
-Open the file `mbed_app.json` in the root directory of your application. This file contains all the user specific configurations your application and the Mbed OS LoRaWAN stack need. Network credentials are typically provided by LoRa network provider.
+Set keys in main.cpp.  Search 'OTAA' or 'ABP' and fill in accordingly.
 
 #### For OTAA
 
 Please add `Device EUI`, `Application EUI` and `Application Key` needed for Over-the-air-activation(OTAA). For example:
 
-```json
-"lora.device-eui": "{ YOUR_DEVICE_EUI }",
-"lora.application-eui": "{ YOUR_APPLICATION_EUI }",
-"lora.application-key": "{ YOUR_APPLICATION_KEY }"
+```c
+static uint8_t DEV_EUI[] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+static uint8_t APP_EUI[] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+static uint8_t APP_KEY[] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00  };
+
 ```
 
 #### For ABP
@@ -65,12 +34,12 @@ For Activation-By-Personalization (ABP) connection method, modify the `mbed_app.
 "lora.over-the-air-activation": false,
 ```
 
-In addition to that, you need to provide `Application Session Key`, `Network Session Key` and `Device Address`. For example:
+In addition to that, you need to provide `Application Session Key`, `Network Session Key` and `Device Address`. For example in main.cpp:
 
-```json
-"lora.appskey": "{ YOUR_APPLICATION_SESSION_KEY }",
-"lora.nwkskey": "{ YOUR_NETWORK_SESSION_KEY }",
-"lora.device-address": " YOUR_DEVICE_ADDRESS_IN_HEX  " 
+```c
+static uint32_t DEV_ADDR = 0x;
+static uint8_t NWK_SKEY[] = {};
+static uint8_t APP_SKEY[] = {}; 
 ```
 
 ## Configuring the application
@@ -103,20 +72,6 @@ However, you can define a timer value in the application, which you can use to p
 }
 ```
 
-## Module support
-
-Here is a nonexhaustive list of boards and modules that we have tested with the Mbed OS LoRaWAN stack:
-
-- MultiTech mDot (SX1272)
-- MultiTech xDot (SX1272)
-- LTEK_FF1705 (SX1272)
-- Advantech Wise 1510 (SX1276)
-- ST B-L072Z-LRWAN1 LoRa®Discovery kit with Murata CMWX1ZZABZ-091 module (SX1276)
-
-Here is a list of boards and modules that have been tested by the community:
-
-- IMST iM880B (SX1272)
-- Embedded Planet Agora (SX1276)
 
 ## Compiling the application
 
@@ -140,50 +95,65 @@ Mbed LoRaWANStack initialized
 
  CONFIRMED message retries : 3 
 
- Adaptive data  rate (ADR) - Enabled 
+ Adaptive data  rate (ADR) - Disabled 
 
  Connection - In Progress ...
 
- Connection - Successful 
+ Connection - Successful
+Polling sensors...
+BME680:
+        temperature: 28.93
+        pressure: 99860.00
+        humidity: 32.45
+        gas resistance: 13021.00
+        co2 equivalent: 500.00
+        breath voc eq: 0.50
+        iaq score: 25.00
+        iaq accuracy: 0
+Si7021:
+        temperature: 28837
+        humidity: 33665
+VL53L0X:
+        distance: 305
+LSM9DS1:
+        accel: (0.00, -0.01, 1.04)
+        gyro:  (0.05, 0.64, -0.20)
+        mag:   (0.05, 0.64, -0.20)
+Battery Voltage:
+        Vbat: 3.31 V
 
- Dummy Sensor Value = 2.1 
 
- 25 bytes scheduled for transmission 
- 
+ 182 bytes scheduled for transmission
+
+ Message Sent to Network Server
+Polling sensors...
+BME680:
+        temperature: 28.94
+        pressure: 99858.00
+        humidity: 31.57
+        gas resistance: 17542.00
+        co2 equivalent: 500.00
+        breath voc eq: 0.50
+        iaq score: 25.00
+        iaq accuracy: 0
+Si7021:
+        temperature: 28794
+        humidity: 33176
+VL53L0X:
+        distance: 286
+LSM9DS1:
+        accel: (0.00, -0.01, 1.04)
+        gyro:  (0.05, 0.66, -0.19)
+        mag:   (0.05, 0.66, -0.19)
+Battery Voltage:
+        Vbat: 3.31 V
+
+
+ 210 bytes scheduled for transmission
+
  Message Sent to Network Server
 
 ```
-
-## [Optional] Adding trace library
-To enable Mbed trace, add to your `mbed_app.json` the following fields:
-
-```json
-    "target_overrides": {
-        "*": {
-            "mbed-trace.enable": true
-            }
-     }
-```
-The trace is disabled by default to save RAM and reduce main stack usage (see chapter Memory optimization).
-
-**Please note that some targets with small RAM size (e.g. DISCO_L072CZ_LRWAN1 and MTB_MURATA_ABZ) mbed traces cannot be enabled without increasing the default** `"main_stack_size": 1024`**.**
-
-## [Optional] Memory optimization 
-
-Using `Arm CC compiler` instead of `GCC` reduces `3K` of RAM. Currently the application takes about `15K` of static RAM with Arm CC, which spills over for the platforms with `20K` of RAM because you need to leave space, about `5K`, for dynamic allocation. So if you reduce the application stack size, you can barely fit into the 20K platforms.
-
-For example, add the following into `config` section in your `mbed_app.json`:
-
-```
-"main_stack_size": {
-    "value": 2048
-}
-```
-
-Essentially you can make the whole application with Mbed LoRaWAN stack in 6K if you drop the RTOS from Mbed OS and use a smaller standard C/C++ library like new-lib-nano. Please find instructions [here](https://os.mbed.com/blog/entry/Reducing-memory-usage-with-a-custom-prin/).
- 
-
-For more information, please follow this [blog post](https://os.mbed.com/blog/entry/Reducing-memory-usage-by-tuning-RTOS-con/).
 
 
 ### License and contributions
