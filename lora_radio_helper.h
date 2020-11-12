@@ -46,7 +46,7 @@ SX1272_LoRaRadio radio(MBED_CONF_APP_LORA_SPI_MOSI,
                        MBED_CONF_APP_LORA_TCXO);
 
 #elif (MBED_CONF_APP_LORA_RADIO == SX1276)
-#include "SX1276_LoRaRadio.h"
+#include "mbed-os/connectivity/drivers/lora/COMPONENT_SX1276/SX1276_LoRaRadio.h"
 SX1276_LoRaRadio radio(MBED_CONF_APP_LORA_SPI_MOSI,
                        MBED_CONF_APP_LORA_SPI_MISO,
                        MBED_CONF_APP_LORA_SPI_SCLK,

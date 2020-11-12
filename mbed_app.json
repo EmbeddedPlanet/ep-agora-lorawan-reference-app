@@ -27,16 +27,19 @@
     },
     "target_overrides": {
         "*": {
+            "target.printf_lib": "std",
+            "lora.tx-max-size": 242,
             "platform.stdio-convert-newlines": true,
             "platform.stdio-baud-rate": 115200,
             "platform.default-serial-baud-rate": 115200,
             "lora.over-the-air-activation": true,
             "lora.duty-cycle-on": true,
             "target.components_add": ["SX1272", "SX1276", "SX126X"],
-            "lora.phy": "EU868",
+            "lora.phy": "US915",
             "lora.device-eui": "{ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }",
             "lora.application-eui": "{ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }",
-            "lora.application-key": "{ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }"
+            "lora.application-key": "{ 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }",
+            "lora.fsb-mask": "{0xFF00, 0x0000, 0x0000, 0x0000, 0x0002}"
         },
 
         "K64F": {
@@ -262,7 +265,7 @@
         },
 
         "EP_AGORA": {
-            "target.macros_add":   ["NRFX_GPIOTE_CONFIG_NUM_OF_LOW_POWER_EVENTS=4"],
+            "mbed-trace.enable"                             : 1,
             "lora-spi-mosi":       "PIN_NAME_LORA_MOSI",
             "lora-spi-miso":       "PIN_NAME_LORA_MISO",
             "lora-spi-sclk":       "PIN_NAME_LORA_SCLK",

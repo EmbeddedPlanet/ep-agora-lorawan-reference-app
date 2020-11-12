@@ -23,7 +23,7 @@
 
 #include "mbed_trace.h"
 
-#ifdef FEA_TRACE_SUPPORT
+//#ifdef FEA_TRACE_SUPPORT
 #include "platform/PlatformMutex.h"
 
 /**
@@ -62,11 +62,11 @@ static void serial_unlock()
 {
     mutex.unlock();
 }
-#else
-void setup_trace()
-{
+// #else
+// void setup_trace()
+// {
 
-}
-#endif
+// }
+//#endif
 
 
